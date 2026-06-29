@@ -10,7 +10,8 @@ import os
 # ============================================
 st.set_page_config(page_title="Easy Stock Check", page_icon="🛡️", layout="wide")
 WATCHLIST_FILE = "my_watchlist.json"
-
+AV_KEY = "V8TXR4IBIMTJCFNB"
+AV_URL = "https://www.alphavantage.co/query"
 # ============================================
 # WATCHLIST MANAGEMENT
 # ============================================
