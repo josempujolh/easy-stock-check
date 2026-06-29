@@ -23,8 +23,11 @@ def load_watchlist():
     return []
 
 def save_watchlist(wl):
-    with open(WATCHLIST_FILE, "w") as f: 
-        json.dump(wl, f)
+    try:
+        with open(WATCHLIST_FILE, "w") as f: 
+            json.dump(wl, f)
+    except:
+        pass # Ignores the error when running on the internet
 
 if "watchlist" not in st.session_state:
     st.session_state.watchlist = load_watchlist()
