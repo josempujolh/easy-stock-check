@@ -37,10 +37,38 @@ if "watchlist" not in st.session_state:
 # ============================================
 # BACKEND: ALL 13 RATIOS
 # ============================================
+def get_data_av(sym):
+    try:
+        inc = requests.get(AV_URL, params={"function": "INCOME_STATEMENT", "symbol": sym, "apikey": AV_KEY}).json().get("annualReports", [])
+        bs = requests.get(AV_URL, params={"function": "BALANCE_SHEET", "symbol": sym, "apikey": AV_KEY}).json().get("annualReports", [])
+        cf = requests.get(AV_URL, params={"function": "CASH_FLOW", "symbol": sym, "apikey": AV_KEY}).json().get("annualReports", [])
+        info_av = requests.get(AV_URL, params={"function": "OVERVIEW", "symbol": sym, "apikey": AV_KEY}).json()
+        quote = requests.get(AV_URL, params={"function": "GLOBAL_QUOTE", "symbol": sym, "apikey": AV_KEY}).json().get("Global Quote", {})
+        if len(inc) < 2 or len(bs) < 2: return None
+        col1, col2 = "Year1", "Year2"
+        d_inc = {"Total Revenue": [float(inc[0].get("totalRevenue", 0) or 0)], "Cost Of Revenue": [float(inc[0].get("costofGoodsAndServicesSold", 0) or 0)], "Net Income": [float(inc[0].get("netIncome", 0) or 0)]}
+        d_bs = {"Total Current Assets": [float(bs[0].get("totalCurrentAssets", 0) or 0)], "Total Current Liabilities": [float(bs[0].get("totalCurrentLiabilities", 0) or 0)], "Inventory": [float(bs[0].get("inventory", 0) or 0)], "Cash And Cash Equivalents": [float(bs[0].get("cashAndCashEquivalentsAtCarryingValue", 0) or 0)], "Short Term Debt": [float(bs[0].get("shortTermDebt", 0) or 0)], "Long Term Debt": [float(bs[0].get("longTermDebt", 0) or 0)], "Stockholders Equity": [float(bs[0].get("totalShareholderEquity", 0) or 0)], "Total Assets": [float(bs[0].get("totalAssets", 0) or 0)]}
+        d_cf = {"Operating Cash Flow": [float(cf[0].get("operatingCashflow", 0) or 0)]}
+        df_inc = pd.DataFrame(d_inc, index=[col1]).T
+        df_bs = pd.DataFrame(d_bs, index=[col1]).T
+        df_cf = pd.DataFrame(d_cf, index=[col1]).T
+        df_bs[col2] = [float(bs[1].get("totalCurrentAssets", 0) or 0), float(bs[1].get("totalCurrentLiabilities", 0) or 0), float(bs[1].get("inventory", 0) or 0), 0, 0, 0, float(bs[1].get("totalShareholderEquity", 0) or 0), float(bs[1].get("totalAssets", 0) or 0)]
+        df_inc[col2] = ["", "", ""]
+        info = {"shortName": info_av.get("Name", sym), "sector": info_av.get("Sector", "Unknown"), "currentPrice": float(quote.get("05. price", 0)) if quote.get("05. price") else None, "sharesOutstanding": float(info_av.get("SharesOutstanding", 0)) if info_av.get("SharesOutstanding") else None, "marketCap": float(info_av.get("MarketCapitalization", 0)) if info_av.get("MarketCapitalization") else None}
+        return {"inc": df_inc, "bs": df_bs, "cf": df_cf, "info": info}
+    except: return None
+
 @st.cache_data(ttl=3600)
 def get_data(symbol):
-    t = yf.Ticker(symbol)
-    return {"inc": t.income_stmt, "bs": t.balance_sheet, "cf": t.cash_flow, "info": t.info}
+    try:
+        t = yf.Ticker(symbol)
+        return {"inc": t.income_stmt, "bs": t.balance_sheet, "cf": t.cash_flow, "info": t.info}
+    except:
+        av_data = get_data_av(symbol)
+        if not av_data:
+            st.error("Both Yahoo and Alpha Vantage failed. (AV limit is 25 calls/day).")
+            st.stop()
+        return av_data
 
 def sget(df, idx, col):
     try:
