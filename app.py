@@ -39,7 +39,9 @@ if "watchlist" not in st.session_state:
 # ============================================
 def get_data_av(sym):
     try:
-        inc = requests.get(AV_URL, params={"function": "INCOME_STATEMENT", "symbol": sym, "apikey": AV_KEY}).json().get("annualReports", [])
+        inc_resp = requests.get(AV_URL, params={"function": "INCOME_STATEMENT", "symbol": sym, "apikey": AV_KEY}).json()
+        if "Note" in inc_resp: return "RATE_LIMIT"
+        inc = inc_resp.get("annualReports", [])
         bs = requests.get(AV_URL, params={"function": "BALANCE_SHEET", "symbol": sym, "apikey": AV_KEY}).json().get("annualReports", [])
         cf = requests.get(AV_URL, params={"function": "CASH_FLOW", "symbol": sym, "apikey": AV_KEY}).json().get("annualReports", [])
         info_av = requests.get(AV_URL, params={"function": "OVERVIEW", "symbol": sym, "apikey": AV_KEY}).json()
