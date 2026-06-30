@@ -211,9 +211,18 @@ def display_stock_card(symbol):
     score = verdicts["total_score"]
     name = info.get("shortName", symbol)
     sector = info.get("sector", "Unknown Sector")
+    price = info.get("currentPrice") or info.get("regularMarketPrice")
     
-    # Header
-    st.subheader(f"{name} ({sector})")
+    # Header: Name and Price side-by-side
+    col_name, col_price = st.columns([3, 1])
+    with col_name:
+        st.subheader(f"{name}")
+        st.caption(f"Sector: {sector}")
+    with col_price:
+        if price:
+            st.metric(label="Current Price", value=f"${price:.2f}")
+        else:
+            st.metric(label="Current Price", value="N/A")
     
     # The Big Score
     if score >= 75: st.metric(label="Investment Health Score", value=f"🟢 {score}/100")
