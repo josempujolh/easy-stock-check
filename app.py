@@ -58,7 +58,8 @@ def get_data_av(sym):
         df_inc[col2] = ["", "", ""]
         info = {"shortName": info_av.get("Name", sym), "sector": info_av.get("Sector", "Unknown"), "currentPrice": float(quote.get("05. price", 0)) if quote.get("05. price") else None, "sharesOutstanding": float(info_av.get("SharesOutstanding", 0)) if info_av.get("SharesOutstanding") else None, "marketCap": float(info_av.get("MarketCapitalization", 0)) if info_av.get("MarketCapitalization") else None}
         return {"inc": df_inc, "bs": df_bs, "cf": df_cf, "info": info}
-    except: return None
+    except Exception as e: 
+        return str(e) # This will now show us the exact error message
 
 @st.cache_data(ttl=3600)
 def get_data(symbol):
