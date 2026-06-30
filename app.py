@@ -67,8 +67,11 @@ def get_data(symbol):
         return {"inc": t.income_stmt, "bs": t.balance_sheet, "cf": t.cash_flow, "info": t.info}
     except:
         av_data = get_data_av(symbol)
+        if av_data == "RATE_LIMIT":
+            st.warning("🛑 Daily limit reached! You used your 5 free checks for today. They reset at midnight US Eastern Time.")
+            st.stop()
         if not av_data:
-            st.error("Both Yahoo and Alpha Vantage failed. (AV limit is 25 calls/day).")
+            st.error("Could not find data for this stock.")
             st.stop()
         return av_data
 
