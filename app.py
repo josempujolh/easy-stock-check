@@ -259,10 +259,10 @@ def display_stock_card(symbol):
 def main():
     col_logo, col_title = st.columns([1, 5])
     with col_logo:
-        st.image("https://z-cdn-media.chatglm.cn/files/8006a589-40d0-43c3-a39e-b8099283dd54.png?auth_key=1882861097-afea29004be64d3da2a61897dcaa70f7-0-cc91ce36c9999c3afe5318cc7986efb6", width=150)
+        st.image("logo.png", width=180)
     with col_title:
-        st.title("Nivesha")
-        st.markdown("*Is it a good investment? Let's find out in plain English.*")
+        st.markdown("<h1 style='color: #0a3d6b; margin-top: 25px;'>Nivesha</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #a0a0a0;'>Is it a good investment? Let's find out in plain English.</p>", unsafe_allow_html=True)
     st.divider()
     
     # Sidebar
