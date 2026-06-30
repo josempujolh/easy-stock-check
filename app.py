@@ -71,6 +71,9 @@ def get_data(symbol):
         if av_data == "RATE_LIMIT":
             st.warning("🛑 Daily limit reached! You used your 5 free checks for today. They reset at midnight US Eastern Time.")
             st.stop()
+        if isinstance(av_data, str): # If it's a string, it's an error message!
+            st.error(f"Debug Error: {av_data}")
+            st.stop()
         if not av_data:
             st.error("Could not find data for this stock.")
             st.stop()
