@@ -257,8 +257,12 @@ def display_stock_card(symbol):
 # MAIN APP UI
 # ============================================
 def main():
-    st.title("🛡️ Easy Stock Check")
-    st.markdown("*Is it a good investment? Let's find out in plain English.*")
+    col_logo, col_title = st.columns([1, 5])
+    with col_logo:
+        st.image("https://z-cdn-media.chatglm.cn/files/8006a589-40d0-43c3-a39e-b8099283dd54.png?auth_key=1882861097-afea29004be64d3da2a61897dcaa70f7-0-cc91ce36c9999c3afe5318cc7986efb6", width=150)
+    with col_title:
+        st.title("Nivesha")
+        st.markdown("*Is it a good investment? Let's find out in plain English.*")
     st.divider()
     
     # Sidebar
