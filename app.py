@@ -8,7 +8,7 @@ import os
 # ============================================
 # CONFIGURATION
 # ============================================
-st.set_page_config(page_title="Easy Stock Check", page_icon="🛡️", layout="wide")
+st.set_page_config(page_title="Nivesha", page_icon="logo.png", layout="wide")
 WATCHLIST_FILE = "my_watchlist.json"
 AV_KEY = "V8TXR4IBIMTJCFNB"
 AV_URL = "https://www.alphavantage.co/query"
