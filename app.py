@@ -259,7 +259,7 @@ def display_stock_card(symbol):
 def main():
     col_logo, col_title = st.columns([1, 5])
     with col_logo:
-        st.image("logo.png", width=180)
+        st.image("logo.png", width=280)
     with col_title:
         st.markdown("<h1 style='color: #0a3d6b; margin-top: 25px;'>Nivesha</h1>", unsafe_allow_html=True)
         st.markdown("<p style='color: #a0a0a0;'>Is it a good investment? Let's find out in plain English.</p>", unsafe_allow_html=True)
